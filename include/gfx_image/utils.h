@@ -11,11 +11,11 @@ AL2O3_EXTERN_C bool Image_GetColorRangeOfD(Image_ImageHeader const * image, doub
 AL2O3_EXTERN_C bool Image_NormalizeEachChannelOf(Image_ImageHeader const * src);
 AL2O3_EXTERN_C bool Image_NormalizeAcrossChannelsOf(Image_ImageHeader const * src);
 
-AL2O3_EXTERN_C void Image_CreateMipMapChain(Image_ImageHeader *image, bool generateFromImage);
-AL2O3_EXTERN_C Image_ImageHeader* Image_Clone(Image_ImageHeader* image);
-AL2O3_EXTERN_C Image_ImageHeader *Image_CloneStructure(Image_ImageHeader *image);
+AL2O3_EXTERN_C void Image_CreateMipMapChain(Image_ImageHeader const * image, bool generateFromImage);
+AL2O3_EXTERN_C Image_ImageHeader const * Image_Clone(Image_ImageHeader const * image);
+AL2O3_EXTERN_C Image_ImageHeader const * Image_CloneStructure(Image_ImageHeader const * image);
 
-AL2O3_EXTERN_C Image_ImageHeader* Image_PreciseConvert(Image_ImageHeader* src, ImageFormat const newFormat);
-AL2O3_EXTERN_C Image_ImageHeader* Image_FastConvert(Image_ImageHeader* src, ImageFormat const newFormat, bool allowInplace);
+AL2O3_EXTERN_C Image_ImageHeader const * Image_PreciseConvert(Image_ImageHeader const * src, ImageFormat const newFormat);
+AL2O3_EXTERN_C Image_ImageHeader const * Image_FastConvert(Image_ImageHeader const * src, ImageFormat const newFormat, bool allowInplace);
 
 #endif //WYRD_IMAGE_UTILS_H
