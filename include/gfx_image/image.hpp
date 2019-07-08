@@ -1,9 +1,10 @@
 #pragma once
-#ifndef WYRD_IMAGE_IMAGE_HPP
-#define WYRD_IMAGE_IMAGE_HPP
+#ifndef AL2O3_IMAGE_IMAGE_HPP
+#define AL2O3_IMAGE_IMAGE_HPP
 
-#include "core/core.h"
-#include "image/image.h"
+#include "al2o3_platform/platform.h"
+#include "gfx_imageformat/format.h"
+#include "gfx_image/image.h"
 
 namespace Image {
 
@@ -14,12 +15,12 @@ struct Image : public Image_ImageHeader {
   }
   static Image *Create(uint32_t width, uint32_t height,
                        uint32_t depth, uint32_t slices,
-                       enum Image_Format format) {
+                       ImageFormat format) {
     return (Image *) Image_Create(width, height, depth, slices, format);
   }
   static Image *CreateNoClear(uint32_t width, uint32_t height,
                               uint32_t depth, uint32_t slices,
-                              enum Image_Format format) {
+                              enum ImageFormat format) {
     return (Image *) Image_CreateNoClear(width, height, depth, slices, format);
   }
 
@@ -52,8 +53,8 @@ struct Image : public Image_ImageHeader {
   bool IsArray() const { return Image_IsArray(this); }
   bool IsCubemap() const { return Image_IsCubemap(this); }
 
-  bool HasMipmaps() const { return flags & Image_IT_MipMaps; }
-  bool HasLayers() const { return flags & IMAGE_IT_Layers; }
+  bool HasMipmaps() const { return flags & Image_NT_MipMaps; }
+  bool HasLayers() const { return flags & Image_NT_Layers; }
 
   size_t LinkedCount() const { return Image_LinkedImageCountOf(this); }
   Image *LinkedImageAt(size_t const index) const { return (Image *) Image_LinkedImageOf(this, index); }

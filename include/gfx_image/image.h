@@ -24,9 +24,9 @@ AL2O3_EXTERN_C enum Image_Channel Image_Channel_Swizzle(enum ImageFormat format,
 // chains. Destroy will free the entire chain.
 // MipMaps + Layers in the same image is not supported
 typedef enum Image_NextType {
-	Image_IT_None,
-	Image_IT_MipMaps,
-	IMAGE_IT_Layers
+	Image_NT_None,
+	Image_NT_MipMaps,
+	Image_NT_Layers
 } Image_NextType;
 
 typedef enum Image_FlagBits {
@@ -146,6 +146,7 @@ AL2O3_EXTERN_C inline size_t Image_CalculateIndex(Image_ImageHeader const *image
 																									uint32_t z,
 																									uint32_t slice) {
 	ASSERT(image);
+	ASSERT(!ImageFormat_IsCompressed(image->format));
 	ASSERT(x < image->width);
 	ASSERT(y < image->height);
 	ASSERT(z < image->depth);
@@ -156,32 +157,71 @@ AL2O3_EXTERN_C inline size_t Image_CalculateIndex(Image_ImageHeader const *image
 	size_t const index = (slice * size3D) + (z * size2D) + (y * size1D) + x;
 	return index;
 }
+AL2O3_EXTERN_C inline size_t Image_GetBlockIndex(Image_ImageHeader const *image,
+																								 uint32_t x,
+																								 uint32_t y,
+																								 uint32_t z,
+																								 uint32_t slice) {
+	ASSERT(image);
+	ASSERT(ImageFormat_IsCompressed(image->format));
+	ASSERT(x < image->width);
+	ASSERT(y < image->height);
+	ASSERT(z < image->depth);
+	ASSERT(slice < image->slices);
+	size_t const blockH = ImageFormat_HeightOfBlock(image->format);
+	size_t const blockW = ImageFormat_WidthOfBlock(image->format);
+
+	size_t const size1D = image->width / blockW;
+	size_t const size2D = (image->width / blockW) * (image->height / blockH);
+	size_t const size3D = size2D * image->depth;
+	size_t const index = 	(slice * size3D) +
+												(z * size2D) +
+												((y / blockH) * size1D) +
+												(x / blockW);
+	return index;
+}
 
 AL2O3_EXTERN_C inline size_t Image_ByteCountPerRowOf(Image_ImageHeader const *image) {
+	ASSERT(image);
+	ASSERT(!ImageFormat_IsCompressed(image->format));
 	return (Image_PixelCountPerRowOf(image) * ImageFormat_BitWidth(image->format)) / 8;
 }
 AL2O3_EXTERN_C inline size_t Image_ByteCountPerPageOf(Image_ImageHeader const *image) {
+	ASSERT(image);
+	ASSERT(!ImageFormat_IsCompressed(image->format));
 	return (Image_PixelCountPerPageOf(image) * ImageFormat_BitWidth(image->format)) / 8;
 }
 AL2O3_EXTERN_C inline size_t Image_ByteCountPerSliceOf(Image_ImageHeader const *image) {
+	ASSERT(image);
+	ASSERT(!ImageFormat_IsCompressed(image->format));
 	return (Image_PixelCountPerSliceOf(image) * ImageFormat_BitWidth(image->format)) / 8;
 }
 AL2O3_EXTERN_C inline size_t Image_ByteCountOf(Image_ImageHeader const *image) {
-	return (Image_PixelCountOf(image) * ImageFormat_BitWidth(image->format)) / 8;
+	ASSERT(image);
+
+	if(!ImageFormat_IsCompressed(image->format)) {
+		return (Image_PixelCountOf(image) * ImageFormat_BitWidth(image->format)) / 8;
+	} else {
+		return (Image_PixelCountOf(image) * ImageFormat_BitSizeOfBlock(image->format)) /
+				(ImageFormat_PixelCountOfBlock(image->format) * 8);
+
+	}
+
 }
+
 AL2O3_EXTERN_C inline size_t Image_ByteCountOfImageChainOf(Image_ImageHeader const *image) {
 
 	size_t total = Image_ByteCountOf(image);
 
 	switch (image->nextType) {
-	case Image_IT_MipMaps:
-	case IMAGE_IT_Layers:
+	case Image_NT_MipMaps:
+	case Image_NT_Layers:
 		if (image->nextImage != NULL) {
 			total += Image_ByteCountOfImageChainOf(image->nextImage);
 		}
 		break;
 	default:
-	case Image_IT_None:break;
+	case Image_NT_None:break;
 	}
 
 	return total;
