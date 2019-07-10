@@ -30,8 +30,8 @@ typedef enum Image_NextType {
 } Image_NextType;
 
 typedef enum Image_FlagBits {
-	Image_Flag_Cubemap = 0x0,
-	Image_Flag_HeaderOnly = 0x1,
+	Image_Flag_Cubemap = 0x1,
+	Image_Flag_HeaderOnly = 0x2,
 } Image_FlagBits;
 typedef uint16_t Image_Flags;
 
