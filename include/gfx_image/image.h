@@ -93,6 +93,11 @@ AL2O3_EXTERN_C void Image_FillHeader(uint32_t width,
 																		 enum ImageFormat format,
 																		 Image_ImageHeader *header);
 
+AL2O3_EXTERN_C Image_ImageHeader const* Image_CreateHeaderOnly(	uint32_t width,
+																																 uint32_t height,
+																																 uint32_t depth,
+																																 uint32_t slices,
+																																 enum ImageFormat format);
 
 AL2O3_EXTERN_C inline void *Image_RawDataPtr(Image_ImageHeader const *image) {
 	ASSERT(image != NULL);
