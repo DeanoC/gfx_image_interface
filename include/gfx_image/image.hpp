@@ -3,7 +3,7 @@
 #define AL2O3_IMAGE_IMAGE_HPP
 
 #include "al2o3_platform/platform.h"
-#include "gfx_imageformat/format.h"
+#include "tiny_imageformat/format.h"
 #include "gfx_image/image.h"
 
 namespace Image {
