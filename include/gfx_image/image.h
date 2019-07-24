@@ -5,8 +5,8 @@
 #include "al2o3_platform/platform.h"
 #include "al2o3_cmath/vector.h"
 #include "gfx_image/pixel.h"
-#include "gfx_imageformat/format.h"
-#include "gfx_imageformat/formatcracker.h"
+#include "tiny_imageformat/format.h"
+#include "tiny_imageformat/formatcracker.h"
 
 typedef enum Image_Channel {
 	Image_Red,
