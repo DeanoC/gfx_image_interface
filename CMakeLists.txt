@@ -14,12 +14,9 @@ set(LibName ${BaseInterfaceName}_interface)
 project(${LibName})
 
 set(Interface
-		block.h
 		create.h
-		format.h
-		format_cracker.h
 		image.h
-		io.h
+		image.hpp
 		pixel.h
 		utils.h
 		)
