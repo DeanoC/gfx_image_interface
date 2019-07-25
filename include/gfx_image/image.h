@@ -13,6 +13,8 @@ typedef enum Image_Channel {
 	Image_Green,
 	Image_Blue,
 	Image_Alpha,
+	Image_Constant_0 = -1, // these two special values return 0 or 1 and not fetch from a channel
+	Image_Constant_1 = -2,
 } Image_Channel;
 
 // give a format and a channel you want, returns the actually channel its stored in
@@ -189,23 +191,23 @@ AL2O3_EXTERN_C inline size_t Image_GetBlockIndex(Image_ImageHeader const *image,
 AL2O3_EXTERN_C inline size_t Image_ByteCountPerRowOf(Image_ImageHeader const *image) {
 	ASSERT(image);
 	ASSERT(!TinyImageFormat_IsCompressed(image->format));
-	return (Image_PixelCountPerRowOf(image) * TinyImageFormat_BitWidth(image->format)) / 8;
+	return (Image_PixelCountPerRowOf(image) * TinyImageFormat_BitSize(image->format)) / 8;
 }
 AL2O3_EXTERN_C inline size_t Image_ByteCountPerPageOf(Image_ImageHeader const *image) {
 	ASSERT(image);
 	ASSERT(!TinyImageFormat_IsCompressed(image->format));
-	return (Image_PixelCountPerPageOf(image) * TinyImageFormat_BitWidth(image->format)) / 8;
+	return (Image_PixelCountPerPageOf(image) * TinyImageFormat_BitSize(image->format)) / 8;
 }
 AL2O3_EXTERN_C inline size_t Image_ByteCountPerSliceOf(Image_ImageHeader const *image) {
 	ASSERT(image);
 	ASSERT(!TinyImageFormat_IsCompressed(image->format));
-	return (Image_PixelCountPerSliceOf(image) * TinyImageFormat_BitWidth(image->format)) / 8;
+	return (Image_PixelCountPerSliceOf(image) * TinyImageFormat_BitSize(image->format)) / 8;
 }
 AL2O3_EXTERN_C inline size_t Image_ByteCountOf(Image_ImageHeader const *image) {
 	ASSERT(image);
 
 	if(!TinyImageFormat_IsCompressed(image->format)) {
-		return (Image_PixelCountOf(image) * TinyImageFormat_BitWidth(image->format)) / 8;
+		return (Image_PixelCountOf(image) * TinyImageFormat_BitSize(image->format)) / 8;
 	} else {
 		return (Image_PixelCountOf(image) * TinyImageFormat_BitSizeOfBlock(image->format)) /
 				(TinyImageFormat_PixelCountOfBlock(image->format) * 8);
