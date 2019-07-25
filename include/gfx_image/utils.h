@@ -15,7 +15,7 @@ AL2O3_EXTERN_C void Image_CreateMipMapChain(Image_ImageHeader const * image, boo
 AL2O3_EXTERN_C Image_ImageHeader const * Image_Clone(Image_ImageHeader const * image);
 AL2O3_EXTERN_C Image_ImageHeader const * Image_CloneStructure(Image_ImageHeader const * image);
 
-AL2O3_EXTERN_C Image_ImageHeader const * Image_PreciseConvert(Image_ImageHeader const * src, ImageFormat const newFormat);
-AL2O3_EXTERN_C Image_ImageHeader const * Image_FastConvert(Image_ImageHeader const * src, ImageFormat const newFormat, bool allowInplace);
+AL2O3_EXTERN_C Image_ImageHeader const * Image_PreciseConvert(Image_ImageHeader const * src, TinyImageFormat const newFormat);
+AL2O3_EXTERN_C Image_ImageHeader const * Image_FastConvert(Image_ImageHeader const * src, TinyImageFormat const newFormat, bool allowInplace);
 
 #endif //WYRD_IMAGE_UTILS_H

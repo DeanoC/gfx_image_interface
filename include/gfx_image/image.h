@@ -16,7 +16,7 @@ typedef enum Image_Channel {
 } Image_Channel;
 
 // give a format and a channel you want, returns the actually channel its stored in
-AL2O3_EXTERN_C enum Image_Channel Image_Channel_Swizzle(enum ImageFormat format, enum Image_Channel channel);
+AL2O3_EXTERN_C enum Image_Channel Image_Channel_Swizzle(enum TinyImageFormat format, enum Image_Channel channel);
 
 // Images can have a chain of related images, this type declares what if any
 // the next pointer are. Image_IT_None means no next images
@@ -55,7 +55,7 @@ typedef struct Image_ImageHeader {
 
 	union {
 		uint32_t fmtSizer;
-		ImageFormat format; //< type ImageFormat
+		TinyImageFormat format; //< type TinyImageFormat
 	};
 
 	Image_Flags flags;
@@ -76,12 +76,12 @@ AL2O3_EXTERN_C Image_ImageHeader const *Image_Create(uint32_t width,
 																										 uint32_t height,
 																										 uint32_t depth,
 																										 uint32_t slices,
-																										 enum ImageFormat format);
+																										 enum TinyImageFormat format);
 AL2O3_EXTERN_C Image_ImageHeader const *Image_CreateNoClear(uint32_t width,
 																														uint32_t height,
 																														uint32_t depth,
 																														uint32_t slices,
-																														enum ImageFormat format);
+																														enum TinyImageFormat format);
 AL2O3_EXTERN_C void Image_Destroy(Image_ImageHeader const *image);
 
 // if you want to use the calculation fields without an actual image
@@ -90,14 +90,14 @@ AL2O3_EXTERN_C void Image_FillHeader(uint32_t width,
 																		 uint32_t height,
 																		 uint32_t depth,
 																		 uint32_t slices,
-																		 enum ImageFormat format,
+																		 enum TinyImageFormat format,
 																		 Image_ImageHeader *header);
 
 AL2O3_EXTERN_C Image_ImageHeader const* Image_CreateHeaderOnly(	uint32_t width,
 																																 uint32_t height,
 																																 uint32_t depth,
 																																 uint32_t slices,
-																																 enum ImageFormat format);
+																																 enum TinyImageFormat format);
 
 AL2O3_EXTERN_C inline void *Image_RawDataPtr(Image_ImageHeader const *image) {
 	ASSERT(image != NULL);
@@ -151,7 +151,7 @@ AL2O3_EXTERN_C inline size_t Image_CalculateIndex(Image_ImageHeader const *image
 																									uint32_t z,
 																									uint32_t slice) {
 	ASSERT(image);
-	ASSERT(!ImageFormat_IsCompressed(image->format));
+	ASSERT(!TinyImageFormat_IsCompressed(image->format));
 	ASSERT(x < image->width);
 	ASSERT(y < image->height);
 	ASSERT(z < image->depth);
@@ -168,13 +168,13 @@ AL2O3_EXTERN_C inline size_t Image_GetBlockIndex(Image_ImageHeader const *image,
 																								 uint32_t z,
 																								 uint32_t slice) {
 	ASSERT(image);
-	ASSERT(ImageFormat_IsCompressed(image->format));
+	ASSERT(TinyImageFormat_IsCompressed(image->format));
 	ASSERT(x < image->width);
 	ASSERT(y < image->height);
 	ASSERT(z < image->depth);
 	ASSERT(slice < image->slices);
-	size_t const blockH = ImageFormat_HeightOfBlock(image->format);
-	size_t const blockW = ImageFormat_WidthOfBlock(image->format);
+	size_t const blockH = TinyImageFormat_HeightOfBlock(image->format);
+	size_t const blockW = TinyImageFormat_WidthOfBlock(image->format);
 
 	size_t const size1D = image->width / blockW;
 	size_t const size2D = (image->width / blockW) * (image->height / blockH);
@@ -188,27 +188,27 @@ AL2O3_EXTERN_C inline size_t Image_GetBlockIndex(Image_ImageHeader const *image,
 
 AL2O3_EXTERN_C inline size_t Image_ByteCountPerRowOf(Image_ImageHeader const *image) {
 	ASSERT(image);
-	ASSERT(!ImageFormat_IsCompressed(image->format));
-	return (Image_PixelCountPerRowOf(image) * ImageFormat_BitWidth(image->format)) / 8;
+	ASSERT(!TinyImageFormat_IsCompressed(image->format));
+	return (Image_PixelCountPerRowOf(image) * TinyImageFormat_BitWidth(image->format)) / 8;
 }
 AL2O3_EXTERN_C inline size_t Image_ByteCountPerPageOf(Image_ImageHeader const *image) {
 	ASSERT(image);
-	ASSERT(!ImageFormat_IsCompressed(image->format));
-	return (Image_PixelCountPerPageOf(image) * ImageFormat_BitWidth(image->format)) / 8;
+	ASSERT(!TinyImageFormat_IsCompressed(image->format));
+	return (Image_PixelCountPerPageOf(image) * TinyImageFormat_BitWidth(image->format)) / 8;
 }
 AL2O3_EXTERN_C inline size_t Image_ByteCountPerSliceOf(Image_ImageHeader const *image) {
 	ASSERT(image);
-	ASSERT(!ImageFormat_IsCompressed(image->format));
-	return (Image_PixelCountPerSliceOf(image) * ImageFormat_BitWidth(image->format)) / 8;
+	ASSERT(!TinyImageFormat_IsCompressed(image->format));
+	return (Image_PixelCountPerSliceOf(image) * TinyImageFormat_BitWidth(image->format)) / 8;
 }
 AL2O3_EXTERN_C inline size_t Image_ByteCountOf(Image_ImageHeader const *image) {
 	ASSERT(image);
 
-	if(!ImageFormat_IsCompressed(image->format)) {
-		return (Image_PixelCountOf(image) * ImageFormat_BitWidth(image->format)) / 8;
+	if(!TinyImageFormat_IsCompressed(image->format)) {
+		return (Image_PixelCountOf(image) * TinyImageFormat_BitWidth(image->format)) / 8;
 	} else {
-		return (Image_PixelCountOf(image) * ImageFormat_BitSizeOfBlock(image->format)) /
-				(ImageFormat_PixelCountOfBlock(image->format) * 8);
+		return (Image_PixelCountOf(image) * TinyImageFormat_BitSizeOfBlock(image->format)) /
+				(TinyImageFormat_PixelCountOfBlock(image->format) * 8);
 
 	}
 
