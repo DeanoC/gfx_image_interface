@@ -15,12 +15,12 @@ struct Image : public Image_ImageHeader {
   }
   static Image *Create(uint32_t width, uint32_t height,
                        uint32_t depth, uint32_t slices,
-                       ImageFormat format) {
+                       TinyImageFormat format) {
     return (Image *) Image_Create(width, height, depth, slices, format);
   }
   static Image *CreateNoClear(uint32_t width, uint32_t height,
                               uint32_t depth, uint32_t slices,
-                              enum ImageFormat format) {
+                              enum TinyImageFormat format) {
     return (Image *) Image_CreateNoClear(width, height, depth, slices, format);
   }
 
