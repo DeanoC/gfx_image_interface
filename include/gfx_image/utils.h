@@ -17,5 +17,6 @@ AL2O3_EXTERN_C Image_ImageHeader const * Image_CloneStructure(Image_ImageHeader 
 
 AL2O3_EXTERN_C Image_ImageHeader const * Image_PreciseConvert(Image_ImageHeader const * src, TinyImageFormat const newFormat);
 AL2O3_EXTERN_C Image_ImageHeader const * Image_FastConvert(Image_ImageHeader const * src, TinyImageFormat const newFormat, bool allowInplace);
+AL2O3_EXTERN_C Image_ImageHeader const * Image_PackMipmaps(Image_ImageHeader const * image);
 
 #endif //WYRD_IMAGE_UTILS_H

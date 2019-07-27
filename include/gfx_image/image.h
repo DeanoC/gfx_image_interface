@@ -32,9 +32,11 @@ typedef enum Image_NextType {
 } Image_NextType;
 
 typedef enum Image_FlagBits {
-	Image_Flag_Cubemap = 0x1,
-	Image_Flag_HeaderOnly = 0x2,
+	Image_Flag_Cubemap = 0x1,			// slices are treates as faces of a cubemap
+	Image_Flag_HeaderOnly = 0x2,	// no data attached
+	Image_Flag_PackedMipMaps = 0x4,	// has a packed mipmap
 } Image_FlagBits;
+
 typedef uint16_t Image_Flags;
 
 // Upto 4D (3D Arrays_ image data, stored as packed formats but
@@ -62,7 +64,7 @@ typedef struct Image_ImageHeader {
 
 	Image_Flags flags;
 	uint8_t nextType; ///< Image_NextType
-	uint8_t pad8;
+	uint8_t packedMipMapCount; // if has packed mip maps this it the level count
 
 	union {
 		uint32_t pad[2];
@@ -216,27 +218,12 @@ AL2O3_EXTERN_C inline size_t Image_ByteCountOf(Image_ImageHeader const *image) {
 
 }
 
-AL2O3_EXTERN_C inline size_t Image_ByteCountOfImageChainOf(Image_ImageHeader const *image) {
-
-	size_t total = Image_ByteCountOf(image);
-
-	switch (image->nextType) {
-	case Image_NT_MipMaps:
-	case Image_NT_Layers:
-		if (image->nextImage != NULL) {
-			total += Image_ByteCountOfImageChainOf(image->nextImage);
-		}
-		break;
-	default:
-	case Image_NT_None:break;
-	}
-
-	return total;
-}
+AL2O3_EXTERN_C size_t Image_ByteCountOfImageChainOf(Image_ImageHeader const *image);
 
 AL2O3_EXTERN_C size_t Image_BytesRequiredForMipMapsOf(Image_ImageHeader const *image);
 
 AL2O3_EXTERN_C size_t Image_LinkedImageCountOf(Image_ImageHeader const *image);
+
 AL2O3_EXTERN_C Image_ImageHeader const *Image_LinkedImageOf(Image_ImageHeader const *image, size_t const index);
 
 AL2O3_EXTERN_C inline bool Image_Is1D(Image_ImageHeader const *image) {
@@ -253,6 +240,10 @@ AL2O3_EXTERN_C inline bool Image_IsArray(Image_ImageHeader const *image) {
 }
 AL2O3_EXTERN_C inline bool Image_IsCubemap(Image_ImageHeader const *image) {
 	return image->flags & Image_Flag_Cubemap;
+}
+
+AL2O3_EXTERN_C inline bool Image_HasPackedMipMaps(Image_ImageHeader const *image) {
+	return image->flags & Image_Flag_PackedMipMaps;
 }
 
 #endif //WYRD_IMAGE_IMAGE_H
