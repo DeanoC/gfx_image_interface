@@ -13,14 +13,17 @@
 // MipMaps + Layers in the same image is not supported
 typedef enum Image_NextType {
 	Image_NT_None,
-	Image_NT_MipMaps,
-	Image_NT_Layers
+	Image_NT_MipMap,
+	Image_NT_Layer,
+	Image_NT_Plane,
+	Image_NT_CLUT,
 } Image_NextType;
 
 typedef enum Image_FlagBits {
-	Image_Flag_Cubemap = 0x1,			// slices are treates as faces of a cubemap
-	Image_Flag_HeaderOnly = 0x2,	// no data attached
+	Image_Flag_Cubemap = 0x1,				// slices are treates as faces of a cubemap
+	Image_Flag_HeaderOnly = 0x2,		// no data attached
 	Image_Flag_PackedMipMaps = 0x4,	// has a packed mipmap
+	Image_Flag_CLUT = 0x8,					// has a Colour LookUp Table
 } Image_FlagBits;
 
 typedef uint16_t Image_Flags;
@@ -97,7 +100,6 @@ AL2O3_EXTERN_C inline void *Image_RawDataPtr(Image_ImageHeader const *image) {
 
 AL2O3_EXTERN_C void Image_GetPixelAt(Image_ImageHeader const *image, Image_PixelD *pixel, size_t index);
 AL2O3_EXTERN_C void Image_SetPixelAt(Image_ImageHeader const *image, Image_PixelD const *pixel, size_t index);
-AL2O3_EXTERN_C double Image_GetChannelAt(Image_ImageHeader const *image, TinyImageFormat_LogicalChannel channel, size_t index);
 AL2O3_EXTERN_C void Image_SetChannelAt(Image_ImageHeader const *image,
 																			 TinyImageFormat_LogicalChannel channel,
 																			 size_t index,
@@ -179,25 +181,25 @@ AL2O3_EXTERN_C inline size_t Image_GetBlockIndex(Image_ImageHeader const *image,
 AL2O3_EXTERN_C inline size_t Image_ByteCountPerRowOf(Image_ImageHeader const *image) {
 	ASSERT(image);
 	ASSERT(!TinyImageFormat_IsCompressed(image->format));
-	return (Image_PixelCountPerRowOf(image) * TinyImageFormat_BitSizeOfPixelOrBlock(image->format)) / 8;
+	return (Image_PixelCountPerRowOf(image) * TinyImageFormat_BitSizeOfBlock(image->format)) / 8;
 }
 AL2O3_EXTERN_C inline size_t Image_ByteCountPerPageOf(Image_ImageHeader const *image) {
 	ASSERT(image);
 	ASSERT(!TinyImageFormat_IsCompressed(image->format));
-	return (Image_PixelCountPerPageOf(image) * TinyImageFormat_BitSizeOfPixelOrBlock(image->format)) / 8;
+	return (Image_PixelCountPerPageOf(image) * TinyImageFormat_BitSizeOfBlock(image->format)) / 8;
 }
 AL2O3_EXTERN_C inline size_t Image_ByteCountPerSliceOf(Image_ImageHeader const *image) {
 	ASSERT(image);
 	ASSERT(!TinyImageFormat_IsCompressed(image->format));
-	return (Image_PixelCountPerSliceOf(image) * TinyImageFormat_BitSizeOfPixelOrBlock(image->format)) / 8;
+	return (Image_PixelCountPerSliceOf(image) * TinyImageFormat_BitSizeOfBlock(image->format)) / 8;
 }
 AL2O3_EXTERN_C inline size_t Image_ByteCountOf(Image_ImageHeader const *image) {
 	ASSERT(image);
 
 	if(!TinyImageFormat_IsCompressed(image->format)) {
-		return (Image_PixelCountOf(image) * TinyImageFormat_BitSizeOfPixelOrBlock(image->format)) / 8;
+		return (Image_PixelCountOf(image) * TinyImageFormat_BitSizeOfBlock(image->format)) / 8;
 	} else {
-		return (Image_PixelCountOf(image) * TinyImageFormat_BitSizeOfPixelOrBlock(image->format)) /
+		return (Image_PixelCountOf(image) * TinyImageFormat_BitSizeOfBlock(image->format)) /
 				(TinyImageFormat_PixelCountOfBlock(image->format) * 8);
 
 	}
