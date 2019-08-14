@@ -98,7 +98,13 @@ AL2O3_EXTERN_C inline void *Image_RawDataPtr(Image_ImageHeader const *image) {
 	return (void *) (image + 1);
 }
 
-AL2O3_EXTERN_C void Image_GetPixelAt(Image_ImageHeader const *image, Image_PixelD *pixel, size_t index);
+AL2O3_EXTERN_C bool Image_GetPixelAtF(Image_ImageHeader const *image, float *pixel, size_t index);
+AL2O3_EXTERN_C bool Image_GetBlockAtF(Image_ImageHeader const *image, float *pixel, size_t index);
+AL2O3_EXTERN_C bool Image_GetRowAtF(Image_ImageHeader const *image, float *pixel, size_t index);
+
+AL2O3_EXTERN_C bool Image_GetPixelAtD(Image_ImageHeader const *image, Image_PixelD *pixel, size_t index);
+AL2O3_EXTERN_C bool Image_GetBlockAtD(Image_ImageHeader const *image, Image_PixelD *pixel, size_t index);
+
 AL2O3_EXTERN_C void Image_SetPixelAt(Image_ImageHeader const *image, Image_PixelD const *pixel, size_t index);
 AL2O3_EXTERN_C void Image_SetChannelAt(Image_ImageHeader const *image,
 																			 TinyImageFormat_LogicalChannel channel,
