@@ -4,7 +4,8 @@
 
 #include "al2o3_platform/platform.h"
 #include "gfx_image/pixel.h"
-#include "tiny_imageformat/tinyimageformat.h"
+#include "tiny_imageformat/tinyimageformat_base.h"
+#include "tiny_imageformat/tinyimageformat_query.h"
 
 // Images can have a chain of related images, this type declares what if any
 // the next pointer are. Image_IT_None means no next images
@@ -105,11 +106,9 @@ AL2O3_EXTERN_C bool Image_GetRowAtF(Image_ImageHeader const *image, float *pixel
 AL2O3_EXTERN_C bool Image_GetPixelAtD(Image_ImageHeader const *image, Image_PixelD *pixel, size_t index);
 AL2O3_EXTERN_C bool Image_GetBlockAtD(Image_ImageHeader const *image, Image_PixelD *pixel, size_t index);
 
-AL2O3_EXTERN_C void Image_SetPixelAt(Image_ImageHeader const *image, Image_PixelD const *pixel, size_t index);
-AL2O3_EXTERN_C void Image_SetChannelAt(Image_ImageHeader const *image,
-																			 TinyImageFormat_LogicalChannel channel,
-																			 size_t index,
-																			 double value);
+AL2O3_EXTERN_C bool Image_SetPixelAtF(Image_ImageHeader const *image, Image_PixelF const *pixel, size_t index);
+AL2O3_EXTERN_C bool Image_SetPixelAtD(Image_ImageHeader const *image, Image_PixelD const *pixel, size_t index);
+
 AL2O3_EXTERN_C void Image_CopyImage(Image_ImageHeader const *src, Image_ImageHeader const *dst);
 AL2O3_EXTERN_C void Image_CopySlice(Image_ImageHeader const *src,
 																		uint32_t sw,
