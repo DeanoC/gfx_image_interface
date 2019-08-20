@@ -27,8 +27,6 @@ typedef enum Image_FlagBits {
 	Image_Flag_CLUT = 0x8,					// has a Colour LookUp Table
 } Image_FlagBits;
 
-typedef uint16_t Image_Flags;
-
 // Upto 4D (3D Arrays_ image data, stored as packed formats but
 // accessed as floats or double upto 4 channels per pixel in RGBA order
 // Support image arrays/slices
@@ -50,16 +48,16 @@ typedef struct Image_ImageHeader {
 	uint32_t slices;
 
 	union {
-		uint32_t fmtSizer;
+		uint32_t fmtSizer; // ensure there is always 32 bit if saved to disk
 		TinyImageFormat format; //< type TinyImageFormat
 	};
 
-	Image_Flags flags;
+	uint16_t flags;
 	uint8_t nextType; ///< Image_NextType
 	uint8_t packedMipMapCount; // if has packed mip maps this it the level count
 
 	union {
-		uint32_t pad[2];
+		uint64_t pad; // ensure always enough space for 64 bit if saved to disk
 		struct Image_ImageHeader const *nextImage;
 	};
 
@@ -101,15 +99,21 @@ AL2O3_EXTERN_C inline void *Image_RawDataPtr(Image_ImageHeader const *image) {
 	return (void *) (image + 1);
 }
 
+AL2O3_EXTERN_C bool Image_GetBlocksAtF(Image_ImageHeader const *image, float *pixels, size_t blockCounts, size_t index);
+AL2O3_EXTERN_C bool Image_SetBlocksAtF(Image_ImageHeader const *image, float const *pixels, size_t blockCount, size_t index);
+
 AL2O3_EXTERN_C bool Image_GetPixelAtF(Image_ImageHeader const *image, float *pixel, size_t index);
-AL2O3_EXTERN_C bool Image_GetBlockAtF(Image_ImageHeader const *image, float *pixel, size_t index);
-AL2O3_EXTERN_C bool Image_GetRowAtF(Image_ImageHeader const *image, float *pixel, size_t index);
+AL2O3_EXTERN_C bool Image_SetPixelAtF(Image_ImageHeader const *image, float const *pixel, size_t index);
+AL2O3_EXTERN_C bool Image_GetRowAtF(Image_ImageHeader const *image, float *pixels, size_t index);
+AL2O3_EXTERN_C bool Image_SetRowAtF(Image_ImageHeader const *image, float const *pixels, size_t index);
 
-AL2O3_EXTERN_C bool Image_GetPixelAtD(Image_ImageHeader const *image, Image_PixelD *pixel, size_t index);
-AL2O3_EXTERN_C bool Image_GetBlockAtD(Image_ImageHeader const *image, Image_PixelD *pixel, size_t index);
+AL2O3_EXTERN_C bool Image_GetBlocksAtD(Image_ImageHeader const *image, double *pixels, size_t blockCounts, size_t index);
+AL2O3_EXTERN_C bool Image_SetBlocksAtD(Image_ImageHeader const *image, double const *pixels, size_t blockCount, size_t index);
 
-AL2O3_EXTERN_C bool Image_SetPixelAtF(Image_ImageHeader const *image, Image_PixelF const *pixel, size_t index);
-AL2O3_EXTERN_C bool Image_SetPixelAtD(Image_ImageHeader const *image, Image_PixelD const *pixel, size_t index);
+AL2O3_EXTERN_C bool Image_GetPixelAtD(Image_ImageHeader const *image, double *pixel, size_t index);
+AL2O3_EXTERN_C bool Image_SetPixelAtD(Image_ImageHeader const *image, double const *pixel, size_t index);
+AL2O3_EXTERN_C bool Image_GetRowAtD(Image_ImageHeader const *image, double *pixels, size_t index);
+AL2O3_EXTERN_C bool Image_SetRowAtD(Image_ImageHeader const *image, double const *pixels, size_t index);
 
 AL2O3_EXTERN_C void Image_CopyImage(Image_ImageHeader const *src, Image_ImageHeader const *dst);
 AL2O3_EXTERN_C void Image_CopySlice(Image_ImageHeader const *src,
