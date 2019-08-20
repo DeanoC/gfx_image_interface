@@ -185,29 +185,26 @@ AL2O3_EXTERN_C inline size_t Image_GetBlockIndex(Image_ImageHeader const *image,
 
 AL2O3_EXTERN_C inline size_t Image_ByteCountPerRowOf(Image_ImageHeader const *image) {
 	ASSERT(image);
-	ASSERT(!TinyImageFormat_IsCompressed(image->format));
-	return (Image_PixelCountPerRowOf(image) * TinyImageFormat_BitSizeOfBlock(image->format)) / 8;
-}
+
+	return (Image_PixelCountPerRowOf(image) * TinyImageFormat_BitSizeOfBlock(image->format)) /
+			(TinyImageFormat_PixelCountOfBlock(image->format) * 8);
+	}
 AL2O3_EXTERN_C inline size_t Image_ByteCountPerPageOf(Image_ImageHeader const *image) {
 	ASSERT(image);
-	ASSERT(!TinyImageFormat_IsCompressed(image->format));
-	return (Image_PixelCountPerPageOf(image) * TinyImageFormat_BitSizeOfBlock(image->format)) / 8;
+	return (Image_PixelCountPerPageOf(image) * TinyImageFormat_BitSizeOfBlock(image->format)) /
+			(TinyImageFormat_PixelCountOfBlock(image->format) * 8);
 }
 AL2O3_EXTERN_C inline size_t Image_ByteCountPerSliceOf(Image_ImageHeader const *image) {
 	ASSERT(image);
-	ASSERT(!TinyImageFormat_IsCompressed(image->format));
-	return (Image_PixelCountPerSliceOf(image) * TinyImageFormat_BitSizeOfBlock(image->format)) / 8;
+	return (Image_PixelCountPerSliceOf(image) * TinyImageFormat_BitSizeOfBlock(image->format)) /
+				(TinyImageFormat_PixelCountOfBlock(image->format) * 8);
+
 }
 AL2O3_EXTERN_C inline size_t Image_ByteCountOf(Image_ImageHeader const *image) {
 	ASSERT(image);
 
-	if(!TinyImageFormat_IsCompressed(image->format)) {
-		return (Image_PixelCountOf(image) * TinyImageFormat_BitSizeOfBlock(image->format)) / 8;
-	} else {
-		return (Image_PixelCountOf(image) * TinyImageFormat_BitSizeOfBlock(image->format)) /
-				(TinyImageFormat_PixelCountOfBlock(image->format) * 8);
-
-	}
+	return (Image_PixelCountOf(image) * TinyImageFormat_BitSizeOfBlock(image->format)) /
+						(TinyImageFormat_PixelCountOfBlock(image->format) * 8);
 
 }
 
