@@ -21,7 +21,7 @@ typedef enum Image_NextType {
 } Image_NextType;
 
 typedef enum Image_FlagBits {
-	Image_Flag_Cubemap = 0x1,				// slices are treates as faces of a cubemap
+	Image_Flag_Cubemap = 0x1,				// slices are treated as faces of a cubemap
 	Image_Flag_HeaderOnly = 0x2,		// no data attached
 	Image_Flag_PackedMipMaps = 0x4,	// has a packed mipmap
 	Image_Flag_CLUT = 0x8,					// has a Colour LookUp Table
@@ -30,13 +30,15 @@ typedef enum Image_FlagBits {
 typedef uint16_t Image_Flags;
 
 // Upto 4D (3D Arrays_ image data, stored as packed formats but
-// accessed as double upto 4 channels per pixel in RGBA
+// accessed as floats or double upto 4 channels per pixel in RGBA order
 // Support image arrays/slices
-// Image always requires to the first channel as R etc.
-// this means that you ask for R and it will retrieve it from wherever
-// it really is in the format (i.e. you don't worry about how its encoded)
+// You ask for R and it will retrieve it from wherever it really is in the
+// format (i.e. you don't worry about how its encoded)
 // however this does leave a few formats a bit weird, i.e. X8D24 has X as
 // R and D as G.. but that matches shaders generally anyway.
+// Mipmaps can be stored either packed in the 1st image or in a chain of
+// images. A utility function can convert from chain to packed.
+// CLUTs index image has a LUT image next in chain. LUT should be R8G8B8A8
 
 // the image data follows this header directly
 typedef struct Image_ImageHeader {
@@ -213,6 +215,8 @@ AL2O3_EXTERN_C size_t Image_ByteCountOfImageChainOf(Image_ImageHeader const *ima
 AL2O3_EXTERN_C size_t Image_BytesRequiredForMipMapsOf(Image_ImageHeader const *image);
 
 AL2O3_EXTERN_C size_t Image_LinkedImageCountOf(Image_ImageHeader const *image);
+
+AL2O3_EXTERN_C size_t Image_MipMapCountOf(Image_ImageHeader const *image);
 
 AL2O3_EXTERN_C Image_ImageHeader const *Image_LinkedImageOf(Image_ImageHeader const *image, size_t const index);
 
