@@ -32,27 +32,26 @@ typedef enum Image_FlagBits {
 // Support image arrays/slices
 // You ask for R and it will retrieve it from wherever it really is in the
 // format (i.e. you don't worry about how its encoded)
-// however this does leave a few formats a bit weird, i.e. X8D24 has X as
-// R and D as G.. but that matches shaders generally anyway.
 // Mipmaps can be stored either packed in the 1st image or in a chain of
 // images. A utility function can convert from chain to packed.
 // CLUTs index image has a LUT image next in chain. LUT should be R8G8B8A8
 
 // the image data follows this header directly
 typedef struct Image_ImageHeader {
-	uint64_t dataSize;
+	uint64_t dataSize; ///< size of data following this header (Not including it!)
 
+	// width, height and depth are in pixels (NOT blocks)
 	uint32_t width;
 	uint32_t height;
 	uint32_t depth;
 	uint32_t slices;
 
 	union {
-		uint32_t fmtSizer; // ensure there is always 32 bit if saved to disk
-		TinyImageFormat format; //< type TinyImageFormat
+		uint32_t fmtSizer; ///< ensure there is always 32 bit if saved to disk
+		TinyImageFormat format; ///< type TinyImageFormat
 	};
 
-	uint16_t flags;
+	uint16_t flags; ///< From Image_FlagBits
 	uint8_t nextType; ///< Image_NextType
 	uint8_t packedMipMapCount; // if has packed mip maps this it the level count
 
@@ -65,7 +64,7 @@ typedef struct Image_ImageHeader {
 
 // Image are fundamentally 4D arrays
 // 'helper' functions in create.h let you
-// create and use them in more familar texture terms
+// create and use them in more familiar texture terms
 AL2O3_EXTERN_C Image_ImageHeader const *Image_Create(uint32_t width,
 																										 uint32_t height,
 																										 uint32_t depth,
@@ -154,7 +153,6 @@ AL2O3_EXTERN_C inline size_t Image_CalculateIndex(Image_ImageHeader const *image
 																									uint32_t z,
 																									uint32_t slice) {
 	ASSERT(image);
-	ASSERT(!TinyImageFormat_IsCompressed(image->format));
 	ASSERT(x < image->width);
 	ASSERT(y < image->height);
 	ASSERT(z < image->depth);
@@ -171,7 +169,6 @@ AL2O3_EXTERN_C inline size_t Image_GetBlockIndex(Image_ImageHeader const *image,
 																								 uint32_t z,
 																								 uint32_t slice) {
 	ASSERT(image);
-	ASSERT(TinyImageFormat_IsCompressed(image->format));
 	ASSERT(x < image->width);
 	ASSERT(y < image->height);
 	ASSERT(z < image->depth);
