@@ -3,7 +3,7 @@
 #define AL2O3_IMAGE_IMAGE_HPP
 
 #include "al2o3_platform/platform.h"
-#include "tiny_imageformat/formatgen.h"
+#include "tiny_imageformat/tinyimageformat_base.h"
 #include "gfx_image/image.h"
 
 namespace Image {
@@ -34,27 +34,22 @@ struct Image : public Image_ImageHeader {
 
   Image_PixelD PixelAt(size_t index) const {
     Image_PixelD ret;
-    Image_GetPixelAt(this, &ret, index);
+    Image_GetPixelAtD(this, (double*)&ret, index);
     return ret;
-  }
-  double ChannelAt(size_t index, Image_Channel channel) const {
-    return Image_GetChannelAt(this, channel, index);
   }
 
   void SetPixelAt(size_t index, Image_PixelD const& pixel) {
-    Image_SetPixelAt(this, &pixel, index);
+    Image_SetPixelAtD(this, (double*)&pixel, index);
   }
-  void SetChannelAt(size_t index, Image_Channel channel, double val) {
-    Image_SetChannelAt(this, channel, index, val);
-  }
+
   bool Is1D() const { return Image_Is1D(this); }
   bool Is2D() const { return Image_Is2D(this); }
   bool Is3D() const { return Image_Is3D(this); }
   bool IsArray() const { return Image_IsArray(this); }
   bool IsCubemap() const { return Image_IsCubemap(this); }
 
-  bool HasMipmaps() const { return flags & Image_NT_MipMaps; }
-  bool HasLayers() const { return flags & Image_NT_Layers; }
+  bool HasMipmaps() const { return flags & Image_NT_MipMap; }
+  bool HasLayers() const { return flags & Image_NT_Layer; }
 
   size_t LinkedCount() const { return Image_LinkedImageCountOf(this); }
   Image *LinkedImageAt(size_t const index) const { return (Image *) Image_LinkedImageOf(this, index); }
