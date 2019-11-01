@@ -1,6 +1,4 @@
 #pragma once
-#ifndef GFX_IMAGE_CREATE_H
-#define GFX_IMAGE_CREATE_H
 
 #include "al2o3_platform/platform.h"
 #include "gfx_image/image.h"
@@ -58,7 +56,3 @@ AL2O3_EXTERN_C Image_ImageHeader const * Image_CreateCLUTArrayNoClear(uint32_t w
 																																				 uint32_t height,
 																																				 uint32_t slices,
 																																				 TinyImageFormat format, uint32_t clutSize);
-
-
-
-#endif //WYRD_IMAGE_CREATE_H

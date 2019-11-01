@@ -1,7 +1,4 @@
 #pragma once
-#ifndef GFX_IMAGE_IMAGE_H
-#define GFX_IMAGE_IMAGE_H
-
 #include "al2o3_platform/platform.h"
 #include "gfx_image/pixel.h"
 #include "tiny_imageformat/tinyimageformat_base.h"
@@ -240,5 +237,3 @@ AL2O3_EXTERN_C inline bool Image_IsCubemap(Image_ImageHeader const *image) {
 AL2O3_EXTERN_C inline bool Image_HasPackedMipMaps(Image_ImageHeader const *image) {
 	return image->flags & Image_Flag_PackedMipMaps;
 }
-
-#endif //WYRD_IMAGE_IMAGE_H

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef GFX_IMAGE_PIXEL_H
-#define GFX_IMAGE_PIXEL_H
 
 #include "al2o3_platform/platform.h"
 #include "al2o3_cmath/scalar.h"
@@ -32,5 +30,3 @@ AL2O3_EXTERN_C inline void Image_PixelClampD(Image_PixelD *pixel, double const m
 	pixel->b = Math_ClampD(pixel->b, min[2], max[2]);
 	pixel->a = Math_ClampD(pixel->a, min[3], max[3]);
 }
-
-#endif //WYRD_IMAGE_PIXEL_H

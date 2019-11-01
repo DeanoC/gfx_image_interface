@@ -1,6 +1,4 @@
 #pragma once
-#ifndef AL2O3_IMAGE_IMAGE_HPP
-#define AL2O3_IMAGE_IMAGE_HPP
 
 #include "al2o3_platform/platform.h"
 #include "tiny_imageformat/tinyimageformat_base.h"
@@ -71,11 +69,8 @@ struct Image : public Image_ImageHeader {
   size_t ByteCount() const { return Image_ByteCountOf(this); }
   size_t ByteCountOfImageChain() const { return Image_ByteCountOfImageChainOf(this); }
 
- private:
-
   Image() = delete;
 };
 
 }
 
-#endif //WYRD_IMAGE_IMAGE_HPP
